@@ -1,25 +1,12 @@
 __pycache__/
 *.py[cod]
 .venv/
-venv/
+ASR/
 .env
 .pytest_cache/
 .DS_Store
 
 
-# Ignore vowel recordings
-/data/template/a/
-/data/template/i/
-/data/template/u/
-/data/template/e/
-/data/template/o/
-data/test_closed/a/
-data/test_closed/i/
-data/test_closed/u/
-data/test_closed/e/
-data/test_closed/o/
-data/test_open/a/
-data/test_open/i/
-data/test_open/u/
-data/test_open/e/
-data/test_open/o/
+# Raw downloads (copied into data/ by src/prepareDataset.py)
+/*.wav
+/drive-download-*/
