@@ -5,7 +5,7 @@ scenarios and print Tables 1-3 from the assignment.
 Scenarios
 - Closed recordings: test = the recordings used to build template/model.
 - Closed speakers:   test = other recording of the same speakers.
-- Open speakers:     data/test_open = recordings of other groups' speakers.
+- Open speakers:     data/test/open = recordings of other groups' speakers.
 - Open (LOSO):       extra check, leave-one-speaker-out inside our own group.
 
 Usage: python main.py   (after python prepareDataset.py)
@@ -73,7 +73,7 @@ def evaluate(train, test):
 
 def main() -> None:
     train = load_split("template")
-    test_closed = load_split("test_closed")
+    test_closed = load_split("test/closed")
     speakers = sorted({speaker for speaker, _ in train})
 
     scenarios: dict[str, dict[str, list]] = {"DTW": {}, "Gaussian": {}}
@@ -85,7 +85,7 @@ def main() -> None:
     store("Closed Recording", *evaluate(train, train))
     store("Closed Speakers", *evaluate(train, test_closed))
 
-    store("Open Speakers", *evaluate(train, load_split("test_open")))
+    store("Open Speakers", *evaluate(train, load_split("test/open")))
 
     open_dtw, open_gauss = [], []
     for held_out in speakers:

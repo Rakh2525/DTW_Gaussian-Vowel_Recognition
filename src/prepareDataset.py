@@ -2,10 +2,10 @@
 Organise the raw group recordings into the dataset layout:
 
     data/template/<vowel>/<speaker>.wav     recording 1 (training)
-    data/test_closed/<vowel>/<speaker>.wav  recording 2 (same speaker)
+    data/test/closed/<vowel>/<speaker>.wav  recording 2 (same speaker)
 
 The open-speaker scenario is leave-one-speaker-out over this same data (see
-main.py), so there is no separate test_open copy.
+main.py), so there is no separate test/open copy.
 
 Usage: python prepareDataset.py
 """
@@ -37,7 +37,7 @@ VOWELS = ("a", "i", "u", "e", "o")
 def main() -> None:
     for speaker, (folder, name_of) in SPEAKERS.items():
         for vowel in VOWELS:
-            for number, split in ((1, "template"), (2, "test_closed")):
+            for number, split in ((1, "template"), (2, "test/closed")):
                 source = folder / name_of(vowel, number)
                 target = DATA / split / vowel / f"{speaker}.wav"
                 target.parent.mkdir(parents=True, exist_ok=True)
