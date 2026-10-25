@@ -29,3 +29,8 @@ python src/main.py             # prints Tables 1-3, writes results/
 ```bash
 python -m unittest discover -s test -v
 ```
+
+## Extra analysis
+```bash
+python src/analysis.py   # averaged vs single template, reference order, covariance size -> results/analysis.md
+```
