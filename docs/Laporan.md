@@ -21,7 +21,7 @@ Pada kode dan data, ketiga speaker kelompok dinamai `spk1`, `spk2`, `spk3` (spk1
 
 https://github.com/Rakh2525/DTW_Gaussian-Vowel_Recognition/tree/main/src
 
-Cara menjalankan (dari root repository):
+Cara menjalankan (dari root repositori):
 
 ```bash
 pip install -r requirement.txt
