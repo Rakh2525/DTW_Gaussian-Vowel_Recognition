@@ -18,9 +18,14 @@ python src/main.py             # prints Tables 1-3, writes results/
 ## Scenarios (3 speakers)
 - Closed recordings: test = recording 1 (used for template/model)
 - Closed speakers: test = recording 2 of the same speakers
-- Open speakers: `data/test_open/<vowel>/G07_S0x_<V>.wav`, 5 speakers from another group (25 recordings)
+- Open speakers: `data/test_open/<vowel>/G??_S0x_<V>.wav`, 17 speakers from groups G04, G05, G07, G11 (84 recordings)
 - Open (LOSO): extra check, leave-one-speaker-out inside our own group
 
 ## Dataset
 - `data/template/`, `data/test_closed/`: our group (G06), speakers spk1-spk3
-- `data/test_open/`: recordings of group G07 (S01-S05), downloaded from the shared "Speech Open Set" Drive folder
+- `data/test_open/`: recordings of groups G04, G05, G07, G11, downloaded from the shared "Speech Open Set" Drive folder
+
+## Tests
+```bash
+python -m unittest discover -s test -v
+```
