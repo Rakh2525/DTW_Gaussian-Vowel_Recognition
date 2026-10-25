@@ -15,7 +15,7 @@ Kelas Pemrosesan Ucapan, Minggu ke-9
 | 2 | `[ISI]` | `[ISI]` |
 | 3 | `[ISI]` | `[ISI]` |
 
-Pada kode dan data, ketiga speaker kelompok dinamai `spk1`, `spk2`, `spk3` (`[ISI: pemetaan speaker ke nama anggota]`).
+Pada kode dan data, ketiga speaker kelompok dinamai `spk1`, `spk2`, `spk3` (spk1 adalah Aldoy, spk2 adalah Nadhif, dan spk3 adalah Rabbani).
 
 ## 2. Link Program
 
