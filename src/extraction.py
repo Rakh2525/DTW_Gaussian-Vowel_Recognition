@@ -2,7 +2,39 @@
 using python_speech_features mfcc to extract processed audio for ASR
 """
 
+import numpy as np
 from python_speech_features import mfcc
+
+FeatureSequence = np.ndarray
+
+
+def compute_delta(features: np.ndarray, width: int = 2) -> np.ndarray:
+    """Calculate temporal derivatives with the same shape as the input."""
+    features = np.asarray(features, dtype=np.float64)
+
+    if features.ndim != 2:
+        raise ValueError("features must have shape (frames, coefficients)")
+
+    if features.shape[0] == 0:
+        raise ValueError("features must contain at least one frame")
+
+    denominator = 2 * sum(index * index for index in range(1, width + 1))
+
+    padded = np.pad(
+        features,
+        pad_width=((width, width), (0, 0)),
+        mode="edge",
+    )
+
+    delta = np.zeros_like(features)
+
+    for index in range(1, width + 1):
+        forward = padded[width + index: width + index + len(features)]
+        backward = padded[width - index: width - index + len(features)]
+        delta += index * (forward - backward)
+
+    return delta / denominator
+
 
 def extract_mfcc_39(
     audio: np.ndarray,

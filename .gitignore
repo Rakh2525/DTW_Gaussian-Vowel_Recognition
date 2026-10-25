@@ -23,3 +23,6 @@ ASR/
 /data/test_open/u/
 /data/test_open/e/
 /data/test_open/o/
+# Raw recordings (copied into data/ by src/prepareDataset.py)
+/*.wav
+/drive-download-*/

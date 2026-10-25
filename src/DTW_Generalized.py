@@ -7,42 +7,12 @@ from __future__ import annotations
 from typing import Mapping, Sequence
 
 import numpy as np
-from python_speech_features import mfcc
+
+from extraction import FeatureSequence, extract_mfcc_39
 
 
 VOWELS = ("a", "i", "u", "e", "o")
-FeatureSequence = np.ndarray
 Recording = tuple[np.ndarray, int]
-
-
-def compute_delta(features: np.ndarray, width: int = 2) -> np.ndarray:
-    """Calculate temporal derivatives with the same shape as the input."""
-    features = np.asarray(features, dtype=np.float64)
-
-    if features.ndim != 2:
-        raise ValueError("features must have shape (frames, coefficients)")
-
-    if features.shape[0] == 0:
-        raise ValueError("features must contain at least one frame")
-
-    denominator = 2 * sum(index * index for index in range(1, width + 1))
-
-    padded = np.pad(
-        features,
-        pad_width=((width, width), (0, 0)),
-        mode="edge",
-    )
-
-    delta = np.zeros_like(features)
-
-    for index in range(1, width + 1):
-        forward = padded[width + index: width + index + len(features)]
-        backward = padded[width - index: width - index + len(features)]
-        delta += index * (forward - backward)
-
-    return delta / denominator
-
-
 
 
 def euclidean_distance(
@@ -79,42 +49,30 @@ def calculate_dtw(
     input_length = input_features.shape[0]
     template_length = template_features.shape[0]
 
+    # Pairwise frame distances, same values as euclidean_distance per pair.
+    local = np.linalg.norm(
+        input_features[:, None, :] - template_features[None, :, :],
+        axis=2,
+    )
+
     cost = np.full(
         (input_length, template_length),
         np.inf,
         dtype=np.float64,
     )
 
-    cost[0, 0] = euclidean_distance(
-        input_features[0],
-        template_features[0],
-    )
+    cost[0, 0] = local[0, 0]
 
     for input_index in range(1, input_length):
-        cost[input_index, 0] = (
-            cost[input_index - 1, 0]
-            + euclidean_distance(
-                input_features[input_index],
-                template_features[0],
-            )
-        )
+        cost[input_index, 0] = cost[input_index - 1, 0] + local[input_index, 0]
 
     for template_index in range(1, template_length):
         cost[0, template_index] = (
-            cost[0, template_index - 1]
-            + euclidean_distance(
-                input_features[0],
-                template_features[template_index],
-            )
+            cost[0, template_index - 1] + local[0, template_index]
         )
 
     for input_index in range(1, input_length):
         for template_index in range(1, template_length):
-            local_cost = euclidean_distance(
-                input_features[input_index],
-                template_features[template_index],
-            )
-
             previous_cost = min(
                 cost[input_index - 1, template_index],
                 cost[input_index, template_index - 1],
@@ -122,7 +80,7 @@ def calculate_dtw(
             )
 
             cost[input_index, template_index] = (
-                local_cost + previous_cost
+                local[input_index, template_index] + previous_cost
             )
 
     path = backtrack_dtw_path(cost)
@@ -227,9 +185,9 @@ def build_all_templates(
 
         recordings = template_recordings[vowel]
 
-        if len(recordings) != 5:
+        if len(recordings) == 0:
             raise ValueError(
-                f"vowel {vowel!r} must have exactly 5 template recordings"
+                f"vowel {vowel!r} must have at least 1 template recording"
             )
 
         feature_sequences = [
